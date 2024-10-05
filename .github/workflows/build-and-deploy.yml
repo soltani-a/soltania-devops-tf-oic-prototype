@@ -1,0 +1,77 @@
+name: Build and Deploy OIC Job
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-oic-job
+          path: target/*.jar  # Remplace par *.iar si le fichier généré est au format IAR
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: my-oic-job
+
+      - name: Publish to Nexus Repository
+        env:
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+        run: |
+          curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD \
+            --upload-file my-oic-job.iar \
+            https://nexus.example.com/repository/oic-releases/my-oic-job-1.0.0.iar
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: publish
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Approval required before deployment
+        uses: ahmadnassri/action-deployment-approval@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          approval: true  # Réclame une validation manuelle avant déploiement
+          
+      - name: Deploy to OIC
+        env:
+          OIC_USERNAME: ${{ secrets.OIC_USERNAME }}
+          OIC_PASSWORD: ${{ secrets.OIC_PASSWORD }}
+          OIC_INSTANCE_URL: ${{ secrets.OIC_INSTANCE_URL }}
+        run: |
+          curl -u $OIC_USERNAME:$OIC_PASSWORD \
+            -F "file=@my-oic-job.iar" \
+            -F "deploy=true" \
+            $OIC_INSTANCE_URL/ic/api/integration/v1/deployments/

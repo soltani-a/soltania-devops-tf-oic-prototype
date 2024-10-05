@@ -1,0 +1,20 @@
+{
+    "name": "MyOICIntegration",
+    "version": "1.0",
+    "description": "POC Integration for OIC",
+    "components": [
+      {
+        "type": "integration",
+        "name": "MyOICProcess",
+        "location": "integration/"
+      }
+    ],
+    "dependencies": [],
+    "resources": [
+      {
+        "name": "example_resource.xsd",
+        "location": "resources/example_resource.xsd"
+      }
+    ]
+  }
+  

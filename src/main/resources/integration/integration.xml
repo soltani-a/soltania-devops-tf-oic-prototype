@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<integration name="MyOICIntegration" version="1.0" description="Basic Integration for OIC POC">
+    <services>
+        <service name="MyRESTService" type="trigger" adapter="REST">
+            <wsdl>
+                <!-- Référence vers un fichier de ressource (par exemple, un XSD) -->
+                <url>../resources/example_resource.xsd</url>
+            </wsdl>
+        </service>
+    </services>
+    <connections>
+        <connection name="MySOAPConnection" type="invoke" adapter="SOAP">
+            <endpoint>http://example.com/service</endpoint>
+        </connection>
+    </connections>
+</integration>

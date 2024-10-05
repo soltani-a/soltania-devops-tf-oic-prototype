@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpel:process name="MyOICProcess" targetNamespace="http://example.com/myOICIntegration" xmlns:bpel="http://schemas.xmlsoap.org/ws/2003/03/business-process/">
+    <bpel:sequence>
+        <!-- Exécuter une série d'activités -->
+        <bpel:receive name="ReceiveInput" partnerLink="client" portType="client:process" operation="initiateProcess"/>
+        <bpel:invoke name="InvokeService" partnerLink="MySOAPConnection" operation="performOperation" inputVariable="inputVar"/>
+        <bpel:reply name="ReplyOutput" partnerLink="client" portType="client:process" operation="completeProcess"/>
+    </bpel:sequence>
+</bpel:process>
