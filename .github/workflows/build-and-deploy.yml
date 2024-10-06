@@ -42,30 +42,13 @@ jobs:
 
       - name: Rename ZIP to IAR
         run: |
-          mv target/*.zip target/*.iar  # Renomme le fichier .zip en .iar
-
-      - name: Get exact IAR file name
-        id: iar_name
-        run: |
-          # Rechercher le fichier .iar dans le répertoire target/ et capturer le nom
-          FILE_NAME=$(find target/ -name "*.iar" -type f)
-          echo "IAR file found: ${FILE_NAME}"
-          echo "IAR_FILE_NAME=${FILE_NAME}" >> $GITHUB_ENV  # Enregistrer le nom exact du fichier dans une variable d'environnement
-  
-      - name: Debug IAR File Name
-        run: |
-          # Vérifier la valeur de la variable d'environnement
-          echo "IAR_FILE_NAME variable is set to: ${{ env.IAR_FILE_NAME }}"
-          ls -al ${{ env.IAR_FILE_NAME }}  # Lister les informations sur le fichier capturé pour vérification
-
-      - name: List target directory
-        run: ls -al target  # Étape pour vérifier le contenu du répertoire `target`
+          mv target/my-oic-project-1.0.0-SNAPSHOT-integration-archive.zip target/my-oic-project-1.0.0-SNAPSHOT.iar  # Renomme le fichier .zip en .iar
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: my-oic-job
-          path: ${{ env.FILE }}  # Utiliser la variable d'environnement avec le chemin exact du fichier
+          path: target/my-oic-project-1.0.0-SNAPSHOT.iar  # Utiliser la variable d'environnement avec le chemin exact du fichier
 
   publish:
     needs: build
@@ -85,7 +68,7 @@ jobs:
           NEXUS_URL:      ${{ vars.NEXUS_URL }}
         run: |
           curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD \
-            --upload-file my-oic-job.iar \
+            --upload-file target/my-oic-project-1.0.0-SNAPSHOT.iar \
             $NEXUS_URL
 
   deploy:
@@ -102,6 +85,6 @@ jobs:
           OIC_INSTANCE_URL: ${{ secrets.OIC_INSTANCE_URL }}  # Assigner les secrets dans `env`
         run: |
           curl -u $OIC_USERNAME:$OIC_PASSWORD \
-            -F "file=@my-oic-job.iar" \
+            -F "file=@target/my-oic-project-1.0.0-SNAPSHOT.iar" \
             -F "deploy=true" \
             $OIC_INSTANCE_URL/ic/api/integration/v1/deployments/

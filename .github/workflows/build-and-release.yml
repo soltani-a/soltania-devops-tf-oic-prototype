@@ -33,21 +33,7 @@ jobs:
 
       - name: Rename ZIP to IAR
         run: |
-          mv target/*.zip target/*.iar  # Renomme le fichier .zip en .iar
-
-      - name: Get exact IAR file name
-        id: iar_name
-        run: |
-          # Rechercher le fichier .iar dans le répertoire target/ et capturer le nom
-          FILE_NAME=$(find target/ -name "*.iar" -type f)
-          echo "IAR file found: ${FILE_NAME}"
-          echo "IAR_FILE_NAME=${FILE_NAME}" >> $GITHUB_ENV  # Enregistrer le nom exact du fichier dans une variable d'environnement
-
-      - name: Debug IAR File Name
-        run: |
-          # Vérifier la valeur de la variable d'environnement
-          echo "IAR_FILE_NAME variable is set to: ${{ env.IAR_FILE_NAME }}"
-          ls -al ${{ env.IAR_FILE_NAME }}  # Lister les informations sur le fichier capturé pour vérification
+          mv target/my-oic-project-1.0.0-SNAPSHOT-integration-archive.zip target/my-oic-project-1.0.0-SNAPSHOT.iar  # Renomme le fichier .zip en .iar
   
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -83,6 +69,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/*.iar  # Spécifie le fichier .iar
-          asset_name: my-oic-job.iar  # Nom affiché dans la release
+          asset_path: target  # Spécifie le fichier .iar
+          asset_name: my-oic-project-1.0.0-SNAPSHOT.iar  # Nom affiché dans la release
           asset_content_type: application/zip
