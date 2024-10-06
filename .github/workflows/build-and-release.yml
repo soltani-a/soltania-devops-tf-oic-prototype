@@ -38,9 +38,9 @@ jobs:
       - name: Get exact IAR file name
         id: iar_name
         run: |
-          # Lister les fichiers et capturer le nom exact du fichier .iar
-          FILE_NAME=$(ls target/*.iar)
-          echo "IAR_FILE_NAME=${FILE_NAME}" >> $GITHUB_ENV  # Enregistrer le nom dans une variable d'environnement
+          # Récupérer le nom complet du fichier .iar et l'enregistrer dans une variable d'environnement
+          FILE_NAME=$(find target/ -name "*.iar" -type f)
+          echo "IAR_FILE_NAME=${FILE_NAME}" >> $GITHUB_ENV >> $GITHUB_ENV  # Enregistrer le nom dans une variable d'environnement
   
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
