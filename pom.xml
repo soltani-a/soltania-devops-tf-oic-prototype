@@ -1,56 +1,44 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.example</groupId>
     <artifactId>my-oic-project</artifactId>
-    <version>1.0.0</version>
-    <packaging>zip</packaging>  <!-- Packaging en ZIP car un IAR est un archive ZIP -->
+    <version>1.0.0-SNAPSHOT</version> <!-- Version de snapshot -->
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <packaging>pom</packaging>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>https://ssoltanid.synology.me/nexus/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/integration</directory>
-                <targetPath>integration</targetPath>
-            </resource>
-            <resource>
-                <directory>src/main/manifest</directory>
-                <targetPath>META-INF</targetPath>
-            </resource>
-        </resources>
-
         <plugins>
-            <!-- Plugin Maven pour créer le fichier ZIP -->
+            <!-- Plugin Maven pour créer l'archive ZIP -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
+                    <descriptors>
+                        <descriptor>src/main/assembly/iar.xml</descriptor> <!-- Utilise un descripteur pour définir la structure -->
+                    </descriptors>
                     <archive>
                         <manifest>
-                            <mainClass>com.example.MyOICMainClass</mainClass>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries> <!-- Ajoute le manifest.json -->
                         </manifest>
                         <manifestEntries>
                             <Manifest-Version>1.0</Manifest-Version>
-                            <Implementation-Title>OIC Job</Implementation-Title>
+                            <Implementation-Title>OIC Project</Implementation-Title>
                             <Implementation-Version>${project.version}</Implementation-Version>
                         </manifestEntries>
                     </archive>
-                    <finalName>${project.artifactId}-${project.version}</finalName>
+                    <finalName>${project.artifactId}-${project.version}</finalName> <!-- Nom du fichier final -->
                     <formats>
-                        <format>zip</format>
+                        <format>zip</format> <!-- Génération d'une archive ZIP -->
                     </formats>
                 </configuration>
                 <executions>
