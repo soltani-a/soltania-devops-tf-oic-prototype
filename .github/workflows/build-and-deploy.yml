@@ -58,6 +58,9 @@ jobs:
           echo "IAR_FILE_NAME variable is set to: ${{ env.IAR_FILE_NAME }}"
           ls -al ${{ env.IAR_FILE_NAME }}  # Lister les informations sur le fichier capturé pour vérification
 
+      - name: List target directory
+        run: ls -al target  # Étape pour vérifier le contenu du répertoire `target`
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
