@@ -40,6 +40,9 @@ jobs:
       - name: List target directory
         run: ls -al target  # Étape pour vérifier le contenu du répertoire `target`
 
+      - name: List target directory
+        run: unzip -l *.zip
+
       - name: Rename ZIP to IAR
         run: |
           mv target/my-oic-project-1.0.0-SNAPSHOT-integration-archive.zip target/my-oic-project-1.0.0-SNAPSHOT.iar  # Renomme le fichier .zip en .iar
