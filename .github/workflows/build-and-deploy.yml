@@ -42,7 +42,7 @@ jobs:
 
       - name: List target directory
         run:  |
-          zip_file=$(ls target | grep '.zip' | head -n 1) # Récupère le premier fichier ZIP
+          zip_file=$(ls target | grep '.iar' | head -n 1) # Récupère le premier fichier ZIP
           echo "ZIP file found: $zip_file"
           echo "zip_file=$zip_file" >> $GITHUB_ENV # Définit la variable d'environnement
 
@@ -50,15 +50,11 @@ jobs:
         run: |
           unzip -l target/${{ env.zip_file }} # Utilise la variable d'environnement
 
-      - name: Rename ZIP to IAR
-        run: |
-          mv target/my-oic-project-1.0.0-SNAPSHOT-integration-archive.zip target/my-oic-project-1.0.0-SNAPSHOT.iar  # Renomme le fichier .zip en .iar
-
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: my-oic-job
-          path: target/my-oic-project-1.0.0-SNAPSHOT.iar  # Utiliser la variable d'environnement avec le chemin exact du fichier
+          path: target/${{ env.zip_file }}  # Utiliser la variable d'environnement avec le chemin exact du fichier
 
   publish:
     needs: build
@@ -78,7 +74,7 @@ jobs:
           NEXUS_URL:      ${{ vars.NEXUS_URL }}
         run: |
           curl -u $NEXUS_USERNAME:$NEXUS_PASSWORD \
-            --upload-file target/my-oic-project-1.0.0-SNAPSHOT.iar \
+            --upload-file target/${{ env.zip_file }} \
             $NEXUS_URL
 
   deploy:
