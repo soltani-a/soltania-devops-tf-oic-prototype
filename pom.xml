@@ -21,26 +21,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <descriptors>
-                        <descriptor>src/main/assembly/iar.xml</descriptor> <!-- Utilise un descripteur pour définir la structure -->
-                    </descriptors>
-                    <archive>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries> <!-- Ajoute le manifest.json -->
-                        </manifest>
-                        <manifestEntries>
-                            <Manifest-Version>1.0</Manifest-Version>
-                            <Implementation-Title>OIC Project</Implementation-Title>
-                            <Implementation-Version>${project.version}</Implementation-Version>
-                        </manifestEntries>
-                    </archive>
-                    <finalName>${project.artifactId}-${project.version}</finalName> <!-- Nom du fichier final -->
-                    <formats>
-                        <format>zip</format> <!-- Génération d'une archive ZIP -->
-                    </formats>
-                </configuration>
+                <version>3.7.1</version>
                 <executions>
                     <execution>
                         <id>make-assembly</id>
@@ -48,6 +29,12 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>project</descriptorRef>
+                            </descriptorRefs>
+                            <finalName>${project.artifactId}-${project.version}</finalName>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
