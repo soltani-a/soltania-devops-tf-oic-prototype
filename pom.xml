@@ -34,6 +34,10 @@
                                 <descriptorRef>project</descriptorRef>
                             </descriptorRefs>
                             <finalName>${project.artifactId}-${project.version}</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <archive>
+                                <format>zip</format>
+                            </archive>
                         </configuration>
                     </execution>
                 </executions>
