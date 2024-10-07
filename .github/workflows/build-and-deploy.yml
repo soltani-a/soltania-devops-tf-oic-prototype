@@ -46,6 +46,10 @@ jobs:
           echo "ZIP file found: $zip_file"
           echo "zip_file=$zip_file" >> $GITHUB_ENV # Définit la variable d'environnement
 
+      - name: List target directory
+        run: |
+          unzip -l target/${{ env.zip_file }} # Utilise la variable d'environnement
+
       - name: Rename ZIP to IAR
         run: |
           mv target/my-oic-project-1.0.0-SNAPSHOT-integration-archive.zip target/my-oic-project-1.0.0-SNAPSHOT.iar  # Renomme le fichier .zip en .iar
