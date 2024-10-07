@@ -41,7 +41,10 @@ jobs:
         run: ls -al target  # Étape pour vérifier le contenu du répertoire `target`
 
       - name: List target directory
-        run: unzip -l *.zip
+        run:  |
+          zip_file=$(ls target | grep '.zip' | head -n 1) # Récupère le premier fichier ZIP
+          echo "ZIP file found: $zip_file"
+          echo "zip_file=$zip_file" >> $GITHUB_ENV # Définit la variable d'environnement
 
       - name: Rename ZIP to IAR
         run: |
