@@ -28,23 +28,44 @@ jobs:
         run: mvn clean install
 
       - name: List target directory
-        run: ls -al target  # Étape pour vérifier le contenu du répertoire `target`
-
-      - name: List target directory
         run:  |
           zip_file=$(ls target | grep '.iar' | head -n 1) # Récupère le premier fichier ZIP
           echo "ZIP file found: $zip_file"
           echo "zip_file=$zip_file" >> $GITHUB_ENV # Définit la variable d'environnement
-
-      - name: List target directory
-        run: |
           unzip -l target/${{ env.zip_file }} # Utilise la variable d'environnement
+          target/${{ env.zip_file }}  # Utiliser la variable d'environnement avec le chemin exact du fichier
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+  create_release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4.4.0 
         with:
           name: my-oic-job
-          path: target/${{ env.zip_file }}  # Utiliser la variable d'environnement avec le chemin exact du fichier
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v4.4.0 
+        with:
+          tag_name: v1.0.0
+          release_name: "Release v1.0.0"
+          body: "Release for version v1.0.0 of the OIC integration project."
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1.0.2 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: target  # Spécifie le fichier .iar
+          asset_name: my-oic-project-1.0.0-SNAPSHOT.iar  # Nom affiché dans la release
+          asset_content_type: application/zip
 
   publish:
     needs: build
